@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import frontMatter from "front-matter";
 import { File, FrontMatter, Preferences } from "../types";
+import getFaviconField from "./favicon-field";
 import { replaceLocalStorageFiles } from "./localstorage-files";
 import { getOrCreateBookmarksPath, getVaultPath } from "./vault-path";
 import tagify from "../helpers/tagify";
@@ -49,10 +50,7 @@ async function getMarkdownFiles(dir: string, ignorePaths: string[]): Promise<Arr
 }
 
 function getFaviconOverride(attributes: Record<string, unknown>): string | null {
-  const field = getPreferenceValues<Preferences>().faviconField?.trim();
-  if (!field) return null;
-
-  const value = attributes[field];
+  const value = attributes[getFaviconField()];
   if (typeof value !== "string" || !value.trim()) return null;
 
   return value.trim();

@@ -67,7 +67,9 @@ favicon: "https://cdn.example.com/logos/acme.png"
 
 The scheme is optional, so `favicon: notion.so` works too. Values that aren't `http(s)` URLs are ignored, and the icon falls back to the one derived from `source`.
 
-Leave this preference blank to disable the override entirely.
+Left blank, this preference falls back to `favicon`.
+
+The **Save Bookmark** form exposes this as an optional "Favicon" dropdown. Type a URL into its search field and it becomes a selectable option, showing the icon it resolves to — so you can see the icon the bookmark will get before saving it. The first option always falls back to the bookmark's own URL.
 
 Note that bookmarks are cached, so changing this preference (or an existing `favicon` value) only takes effect once the note is modified — run the **Clear Cache** command to refresh everything at once.
 

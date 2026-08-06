@@ -226,7 +226,7 @@
     {
       "name": "faviconField",
       "title": "Favicon Field",
-      "description": "The frontmatter field used to override the favicon shown in search results. Its value can be a website URL (the favicon of that site is used) or a direct image URL (used as-is). Leave blank to always derive the favicon from the bookmark's source URL.",
+      "description": "The frontmatter field used to override the favicon shown in search results. Its value can be a website URL (the favicon of that site is used) or a direct image URL (used as-is). Defaults to 'favicon' when left blank.",
       "type": "textfield",
       "placeholder": "favicon",
       "default": "favicon",
