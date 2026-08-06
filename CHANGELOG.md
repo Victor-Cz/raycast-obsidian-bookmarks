@@ -1,5 +1,10 @@
 # Obsidian Bookmarks Changelog
 
+## [Unreleased]
+
+- Show the favicon of each bookmarked website in search results, instead of a generic link icon. Falls back to the link icon when no favicon can be found.
+- Allow overriding that favicon from a frontmatter field (configurable via the new "Favicon Field" preference; default is `favicon`). The value can be another website URL or a direct image URL.
+
 ## [1.0.5] - 2024-11-26
 
 - Search for bookmarks in subfolders below the configured Bookmarks subfolder. This option is configurable via a new preferences checkbox; default is true (enabled subfolder search).
