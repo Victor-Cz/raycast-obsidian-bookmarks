@@ -1,5 +1,9 @@
 # Obsidian Bookmarks Changelog
 
+## [Edit Bookmarks] - {PR_MERGE_DATE}
+
+- Add an "Edit Bookmark" action (<kbd>⌘</kbd>+<kbd>E</kbd>) to search results. It reopens the save form, prefilled with the bookmark's URL, title, favicon, tags and notes, and writes the changes back to the same note — its filename, save date and read state are left untouched.
+
 ## [Favicons] - {PR_MERGE_DATE}
 
 - Show the favicon of each bookmarked website in search results, instead of a generic link icon. Falls back to the link icon when no favicon can be found.

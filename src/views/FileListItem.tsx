@@ -10,8 +10,9 @@ type Props = {
   loading: boolean;
   showDetail: boolean;
   setShowDetail: Dispatch<SetStateAction<boolean>>;
+  onFileUpdated?: (file: File) => void;
 };
-export default function FileListItem({ file, loading, showDetail, setShowDetail }: Props): JSX.Element {
+export default function FileListItem({ file, loading, showDetail, setShowDetail, onFileUpdated }: Props): JSX.Element {
   return (
     <List.Item
       id={file.fullPath}
@@ -19,7 +20,14 @@ export default function FileListItem({ file, loading, showDetail, setShowDetail 
       subtitle={file.attributes.publisher ?? file.attributes.source}
       accessories={(file.attributes.tags || []).map((tag) => ({ text: tag }))}
       icon={getFaviconIcon(file.attributes)}
-      actions={<DetailsActions file={file} showDetail={showDetail} setShowDetail={setShowDetail} />}
+      actions={
+        <DetailsActions
+          file={file}
+          showDetail={showDetail}
+          setShowDetail={setShowDetail}
+          onFileUpdated={onFileUpdated}
+        />
+      }
       detail={<FileItemDetail file={file} loading={loading} />}
     />
   );

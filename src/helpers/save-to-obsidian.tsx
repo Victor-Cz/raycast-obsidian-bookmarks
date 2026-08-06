@@ -107,7 +107,7 @@ export async function asFile(values: LinkFormState["values"]): Promise<File> {
 export default async function saveToObsidian(file: File): Promise<string> {
   // Combine the form tags with the required tags
   const requiredTags = tagify(getPreferenceValues<Preferences>().requiredTags);
-  const combinedTags = file.attributes.tags.flatMap((t) => tagify(t)).concat(requiredTags);
+  const combinedTags = Array.from(new Set(file.attributes.tags.flatMap((t) => tagify(t)).concat(requiredTags)));
 
   const favicon = faviconLine(file.attributes.favicon);
   const tagsAndFavicon = `tags: ${JSON.stringify(combinedTags)}${favicon ? `\n${favicon}` : ""}`;
@@ -131,4 +131,59 @@ export default async function saveToObsidian(file: File): Promise<string> {
     addToLocalStorageFiles([file]),
   ]);
   return file.fileName;
+}
+
+const BOOKMARK_HEADING = /^#\s+\[[^\]\n]*\]\([^)\n]*\)\n?/;
+
+function splitBookmarkBody(body: string | undefined): { hasHeading: boolean; description: string } {
+  const content = body ?? "";
+  const match = content.match(BOOKMARK_HEADING);
+  if (!match) return { hasHeading: false, description: content };
+
+  return { hasHeading: true, description: content.slice(match[0].length).replace(/^\n+/, "") };
+}
+
+export function asFormValues(file: File): LinkFormState["values"] {
+  return {
+    url: file.attributes.source,
+    title: file.attributes.title,
+    favicon: file.attributes.favicon ?? "",
+    tags: file.attributes.tags,
+    description: splitBookmarkBody(file.body).description,
+  };
+}
+
+export function asUpdatedFile(values: LinkFormState["values"], original: File): File {
+  const requiredTags = tagify(getPreferenceValues<Preferences>().requiredTags);
+  const urlChanged = values.url !== original.attributes.source;
+
+  const attributes: FrontMatter = {
+    ...original.attributes,
+    source: values.url,
+    publisher: urlChanged ? getPublisher(values.url) : original.attributes.publisher,
+    favicon: values.favicon.trim() || null,
+    title: values.title,
+    tags: Array.from(new Set(values.tags.flatMap((t) => tagify(t)).concat(requiredTags))),
+  };
+
+  const favicon = faviconLine(attributes.favicon);
+  const frontmatter =
+    dedent`
+  title: ${JSON.stringify(attributes.title)}
+  saved: ${formatDate(attributes.saved)}
+  source: ${JSON.stringify(attributes.source)}
+  publisher: ${JSON.stringify(attributes.publisher)}
+  read: ${JSON.stringify(attributes.read)}
+  tags: ${JSON.stringify(attributes.tags)}
+  ` + (favicon ? `\n${favicon}` : "");
+
+  const { hasHeading } = splitBookmarkBody(original.body);
+  const heading = `# [${values.title.replace(/[[\]]/g, "")}](${values.url})`;
+
+  return {
+    ...original,
+    attributes,
+    frontmatter,
+    body: hasHeading ? `${heading}\n\n${values.description}` : values.description,
+  };
 }

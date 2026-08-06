@@ -2,21 +2,37 @@ import { Form, showToast, Toast, getPreferenceValues } from "@raycast/api";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FormActions from "../actions/FormActions";
 import getFaviconIcon, { describeFaviconSource } from "../helpers/get-favicon-icon";
+import { asFormValues } from "../helpers/save-to-obsidian";
 import { findDuplicateBookmark } from "../helpers/url-sanitizer";
 import useFiles from "../hooks/use-files";
 import useLinkForm from "../hooks/use-link-form";
 import useTags from "../hooks/use-tags";
 import * as methods from "../actions/methods";
-import { Preferences } from "../types";
+import { File, Preferences } from "../types";
 
-export default function LinkForm() {
-  const { values, onChange, setValues, loading: linkLoading } = useLinkForm();
+type Props = {
+  file?: File;
+  onSaved?: (file: File) => void;
+};
+
+export default function LinkForm({ file, onSaved }: Props = {}) {
+  const isEditing = file != null;
+  const initialValues = useMemo(() => (file ? asFormValues(file) : undefined), [file]);
+
+  const {
+    values,
+    onChange,
+    setValues,
+    loading: linkLoading,
+  } = useLinkForm(initialValues, { detectFrontmostLink: !isEditing });
   const { tags, loading: tagsLoading } = useTags();
   const { files, loading: filesLoading } = useFiles();
   const toastRef = useRef<Toast>();
   const [hasShownToast, setHasShownToast] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [faviconQuery, setFaviconQuery] = useState("");
+
+  const tagOptions = useMemo(() => Array.from(new Set([...tags, ...(file?.attributes.tags ?? [])])), [tags, file]);
 
   // The favicon dropdown doubles as a text field: whatever is typed in its
   // search bar becomes a selectable option, so the chosen icon can be shown
@@ -39,7 +55,7 @@ export default function LinkForm() {
     async (url: string) => {
       const { checkDuplicates } = getPreferenceValues<Preferences>();
 
-      if (!url || filesLoading || !checkDuplicates) {
+      if (!url || isEditing || filesLoading || !checkDuplicates) {
         setIsDuplicate(false);
         return;
       }
@@ -60,7 +76,7 @@ export default function LinkForm() {
         setIsDuplicate(false);
       }
     },
-    [files, filesLoading]
+    [files, filesLoading, isEditing]
   );
 
   // Check for duplicates whenever URL changes
@@ -70,6 +86,8 @@ export default function LinkForm() {
 
   // Handle loading toast
   useEffect(() => {
+    if (isEditing) return;
+
     if (linkLoading && !hasShownToast) {
       showToast({
         title: "Fetching link details",
@@ -86,13 +104,13 @@ export default function LinkForm() {
     return () => {
       toastRef.current?.hide();
     };
-  }, [linkLoading, hasShownToast]);
+  }, [linkLoading, hasShownToast, isEditing]);
 
   return (
     <Form
-      navigationTitle="Save Bookmark"
+      navigationTitle={isEditing ? "Edit Bookmark" : "Save Bookmark"}
       isLoading={tagsLoading || linkLoading || filesLoading}
-      actions={<FormActions values={values} setValues={setValues} />}
+      actions={<FormActions values={values} setValues={setValues} file={file} onSaved={onSaved} />}
     >
       <Form.TextField
         id="url"
@@ -124,7 +142,7 @@ export default function LinkForm() {
         ))}
       </Form.Dropdown>
       <Form.TagPicker id="tags" title="Tags" value={values.tags} onChange={onChange("tags")}>
-        {tags.map((tag) => (
+        {tagOptions.map((tag) => (
           <Form.TagPicker.Item title={tag} value={tag} key={tag} />
         ))}
       </Form.TagPicker>

@@ -15,7 +15,7 @@ function midnight(daysAgo: number): Date {
 }
 
 export default function SearchBookmarks() {
-  const { files, loading } = useFiles();
+  const { files, loading, updateFile } = useFiles();
   const [showDetail, setShowDetail] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -138,6 +138,7 @@ export default function SearchBookmarks() {
           loading={loading}
           showDetail={showDetail}
           setShowDetail={setShowDetail}
+          onFileUpdated={updateFile}
           key={file.fullPath}
         />
       ))}

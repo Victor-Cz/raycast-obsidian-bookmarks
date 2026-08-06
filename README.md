@@ -73,6 +73,14 @@ The **Save Bookmark** form exposes this as an optional "Favicon" dropdown. Type 
 
 Note that bookmarks are cached, so changing this preference (or an existing `favicon` value) only takes effect once the note is modified — run the **Clear Cache** command to refresh everything at once.
 
+## Editing a Bookmark
+
+The **Edit Bookmark** action (<kbd>⌘</kbd>+<kbd>E</kbd>) in your search results reopens the save form, prefilled from the note: its URL, title, favicon, tags and notes. **Update Bookmark** then writes your changes back to the same note.
+
+The note keeps its filename, its original save date and its read state — only the fields shown in the form are rewritten, so Obsidian links to it keep working even if you change the title.
+
+If the note starts with the `# [Title](url)` heading this extension generates, that heading is regenerated from the form and everything below it is what you edit in the "Notes" field. Notes you wrote yourself keep their body as-is.
+
 ## Screenshots
 
 ![Save a bookmark to Obsidian](./metadata/screenshot2.png)
