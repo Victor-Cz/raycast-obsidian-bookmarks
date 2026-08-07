@@ -13,6 +13,9 @@ export type FormActionPreference =
 export type DetailActionPreference =
   | FormActionPreference
   | "showDetails"
+  | "toggleFavorite"
+  | "moveFavoriteUp"
+  | "moveFavoriteDown"
   | "editBookmark"
   | "markAsRead"
   | "deleteFile";

@@ -65,6 +65,23 @@ export async function saveFile(file: File, isUpdate = false): Promise<File> {
   }
 }
 
+/** Writes back every bookmark whose favorite position changed. */
+export async function saveFavorites(files: File[]): Promise<File[]> {
+  if (files.length === 0) return files;
+
+  try {
+    await Promise.all(files.map((file) => saveToObsidian(file)));
+    return files;
+  } catch (error) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: "Couldn't update favorites",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return [];
+  }
+}
+
 const markAs = (read: boolean) => (file: File) => {
   const newFile: File = { ...file, attributes: { ...file.attributes, read } };
   return saveFile(newFile);

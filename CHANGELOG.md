@@ -2,7 +2,13 @@
 
 ## [Fix Notes Gaining a Copy of Their Frontmatter] - {PR_MERGE_DATE}
 
-- Fix saving a bookmark — marking it as read, editing it — writing a copy of the note's own frontmatter into its body. The body was cut from the note using `bodyBegin`, which counts lines, as if it were a character offset. Run "Clear Cache" once after updating, as cached bookmarks still hold the broken body.
+- Fix saving a bookmark — marking it as read, favoriting it — writing a copy of the note's own frontmatter into its body. The body was cut from the note using `bodyBegin`, which counts lines, as if it were a character offset. Run "Clear Cache" once after updating, as cached bookmarks still hold the broken body.
+
+## [Favorite Bookmarks] - {PR_MERGE_DATE}
+
+- Add any number of bookmarks to a favorites section with <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>F</kbd>. Favorites are pinned above the rest of the search results, in the order you put them in.
+- Reorder favorites with <kbd>⌥</kbd>+<kbd>⇧</kbd>+<kbd>↑</kbd> and <kbd>⌥</kbd>+<kbd>⇧</kbd>+<kbd>↓</kbd>.
+- Store the position in a `favorite` frontmatter field, so favorites live in the vault rather than in the Raycast cache.
 
 ## [Open Links in the Current Browser] - {PR_MERGE_DATE}
 
