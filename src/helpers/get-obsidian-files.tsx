@@ -59,6 +59,7 @@ function getFaviconOverride(attributes: Record<string, unknown>): string | null 
 function extractFrontMatter(content: string): {
   attributes: FrontMatter;
   frontmatter: string | null;
+  body: string;
   bodyBegin: number;
 } {
   try {
@@ -84,6 +85,7 @@ function extractFrontMatter(content: string): {
     return {
       attributes,
       frontmatter: result.frontmatter || null,
+      body: result.body,
       bodyBegin: result.bodyBegin,
     };
   } catch (error) {
@@ -99,6 +101,7 @@ function extractFrontMatter(content: string): {
         read: false,
       },
       frontmatter: null,
+      body: "",
       bodyBegin: 0,
     };
   }
@@ -114,21 +117,16 @@ async function processFile(filePath: string, cachedFiles: Map<string, File>): Pr
     }
 
     const content = await fs.readFile(filePath, { encoding: "utf-8" });
-    const { attributes, frontmatter, bodyBegin } = extractFrontMatter(content);
+    const { attributes, frontmatter, body, bodyBegin } = extractFrontMatter(content);
 
     if (!attributes.title) {
       attributes.title = path.basename(filePath, path.extname(filePath));
     }
 
-    let body = undefined;
-    if (bodyBegin > 0) {
-      body = content.slice(bodyBegin).trim();
-    }
-
     return {
       attributes,
       frontmatter: frontmatter || undefined,
-      body,
+      body: body.trim() || undefined,
       bodyBegin: bodyBegin || undefined,
       fileName: path.basename(filePath),
       fullPath: filePath,

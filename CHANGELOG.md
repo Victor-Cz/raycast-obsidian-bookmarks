@@ -1,5 +1,9 @@
 # Obsidian Bookmarks Changelog
 
+## [Fix Notes Gaining a Copy of Their Frontmatter] - {PR_MERGE_DATE}
+
+- Fix saving a bookmark — marking it as read, editing it — writing a copy of the note's own frontmatter into its body. The body was cut from the note using `bodyBegin`, which counts lines, as if it were a character offset. Run "Clear Cache" once after updating, as cached bookmarks still hold the broken body.
+
 ## [Open Links in the Current Browser] - {PR_MERGE_DATE}
 
 - Add an "Open Link in Current Window" action (<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>O</kbd>) that opens a bookmark as a tab of the browser window already in front, instead of letting the system decide — which, in Arc, means a Little Arc window every time. Falls back to the default browser when the frontmost app isn't one.
