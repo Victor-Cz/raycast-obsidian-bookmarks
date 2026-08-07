@@ -1,5 +1,12 @@
 # Obsidian Bookmarks Changelog
 
+## [Smarter Bookmark Search] - {PR_MERGE_DATE}
+
+- Rank URL matches (ignoring query parameters) ahead of title, tag and note matches when searching bookmarks
+- Filter results by tag with `#tag` tokens, on their own or alongside search terms (for example `raycast #dev`)
+- Suggest matching tags while typing `#`, completed with Tab or Enter
+- Fix bookmark search not matching titles, tags and URLs: those keys pointed at fields that don't exist on the indexed object, so only note contents were searched
+
 ## [1.0.5] - 2024-11-26
 
 - Search for bookmarks in subfolders below the configured Bookmarks subfolder. This option is configurable via a new preferences checkbox; default is true (enabled subfolder search).
