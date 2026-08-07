@@ -3,6 +3,7 @@ export type FormActionPreference =
   | "copyObsidianUrl"
   | "copyObsidianUrlAsMarkdown"
   | "openUrl"
+  | "openUrlInCurrentWindow"
   | "copyUrl"
   | "copyUrlAsMarkdown"
   | "clearCache"

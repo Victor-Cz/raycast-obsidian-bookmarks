@@ -104,6 +104,15 @@ const createBrowserActions = (file: File): ActionGroup<DetailActionPreference> =
       },
     ],
     [
+      "openUrlInCurrentWindow",
+      {
+        title: "Open Link in Current Window",
+        icon: Icon.AppWindow,
+        shortcut: { modifiers: ["cmd", "opt"], key: "o" },
+        onAction: () => Promise.allSettled([methods.openUrlInCurrentWindow(file), showHUD("Opening link…")]),
+      },
+    ],
+    [
       "copyUrl",
       {
         title: "Copy Link",

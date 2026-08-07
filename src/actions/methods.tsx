@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 import copyUrlToClipboard from "../helpers/copy-url-to-clipboard";
 import openObsidianFileOrig, { createObsidianUri } from "../helpers/open-obsidian-file";
+import openUrlInCurrentWindowHelper from "../helpers/open-in-browser";
 import saveToObsidian from "../helpers/save-to-obsidian";
 import { File } from "../types";
 
@@ -12,6 +13,10 @@ export async function openObsidianFile(file: File) {
 
 export async function openUrl(file: File) {
   return open(file.attributes.source);
+}
+
+export async function openUrlInCurrentWindow(file: File) {
+  return openUrlInCurrentWindowHelper(file.attributes.source);
 }
 
 export async function copyUrl(file: File) {
