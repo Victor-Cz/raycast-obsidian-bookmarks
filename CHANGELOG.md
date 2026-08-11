@@ -20,6 +20,7 @@
 - Rank URL matches (ignoring query parameters) ahead of title, tag and note matches when searching bookmarks
 - Filter results by tag with `#tag` tokens, on their own or alongside search terms (for example `raycast #dev`)
 - Suggest matching tags while typing `#`, completed with Tab or Enter
+- Match more strictly, so a search stops returning nearly every bookmark: the default fuzziness matches almost anything on a field as long as a note body
 - Fix bookmark search not matching titles, tags and URLs: those keys pointed at fields that don't exist on the indexed object, so only note contents were searched
 
 ## [Edit Bookmarks] - {PR_MERGE_DATE}
