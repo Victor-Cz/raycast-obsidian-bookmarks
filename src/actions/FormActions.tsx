@@ -235,7 +235,7 @@ export type FormActionsProps = {
   onSaved?: (file: File) => void;
 };
 
-export default function FormActions({ values, setValues, file, onSaved }: FormActionsProps): JSX.Element {
+export default function FormActions({ values, setValues, file, onSaved }: FormActionsProps): React.JSX.Element {
   const { value: obsidianIcon } = useFileIcon("Obsidian");
   const { value: defaultAction } = usePreference("defaultFormAction");
   const { pop } = useNavigation();
