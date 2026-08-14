@@ -4,6 +4,7 @@ import FormActions from "../actions/FormActions";
 import getFaviconIcon, { describeFaviconSource } from "../helpers/get-favicon-icon";
 import getPublisher from "../helpers/get-publisher";
 import { asFormValues } from "../helpers/save-to-obsidian";
+import { noteName, wouldCreateCycle } from "../helpers/sub-bookmarks";
 import { findDuplicateBookmark } from "../helpers/url-sanitizer";
 import useFiles from "../hooks/use-files";
 import useLinkForm from "../hooks/use-link-form";
@@ -13,12 +14,17 @@ import { File, Preferences } from "../types";
 
 type Props = {
   file?: File;
+  /** Note name of the bookmark to preselect as parent when saving a new one. */
+  initialParent?: string;
   onSaved?: (file: File) => void;
 };
 
-export default function LinkForm({ file, onSaved }: Props = {}) {
+export default function LinkForm({ file, initialParent, onSaved }: Props = {}) {
   const isEditing = file != null;
-  const initialValues = useMemo(() => (file ? asFormValues(file) : undefined), [file]);
+  const initialValues = useMemo(
+    () => (file ? asFormValues(file) : initialParent ? { parent: initialParent } : undefined),
+    [file, initialParent]
+  );
 
   const {
     values,
@@ -34,6 +40,19 @@ export default function LinkForm({ file, onSaved }: Props = {}) {
   const [faviconQuery, setFaviconQuery] = useState("");
 
   const tagOptions = useMemo(() => Array.from(new Set([...tags, ...(file?.attributes.tags ?? [])])), [tags, file]);
+
+  // Bookmarks that can serve as parent: anything except the bookmark being
+  // edited and its own (transitive) sub-bookmarks, which would create a loop.
+  const parentOptions = useMemo(() => {
+    const candidates = file
+      ? files.filter((candidate) => candidate.fullPath !== file.fullPath && !wouldCreateCycle(files, candidate, file))
+      : files;
+    return [...candidates].sort((a, b) => a.attributes.title.localeCompare(b.attributes.title));
+  }, [files, file]);
+
+  // Keep a dangling parent (note renamed or missing) selectable so editing
+  // another field doesn't silently drop it.
+  const hasCurrentParent = !values.parent || parentOptions.some((candidate) => noteName(candidate) === values.parent);
 
   // The favicon dropdown doubles as a text field: whatever is typed in its
   // search bar becomes a selectable option, so the chosen icon can be shown
@@ -148,6 +167,24 @@ export default function LinkForm({ file, onSaved }: Props = {}) {
       >
         {faviconOptions.map((option) => (
           <Form.Dropdown.Item key={option.value} value={option.value} title={option.title} icon={option.icon} />
+        ))}
+      </Form.Dropdown>
+      <Form.Dropdown
+        id="parent"
+        title="Parent"
+        info="Optional. Saves this bookmark as a sub-bookmark of another one, stored as a wikilink in the parent frontmatter field."
+        value={values.parent}
+        onChange={onChange("parent")}
+      >
+        <Form.Dropdown.Item value="" title="None" />
+        {!hasCurrentParent && <Form.Dropdown.Item value={values.parent} title={`${values.parent} (missing)`} />}
+        {parentOptions.map((candidate) => (
+          <Form.Dropdown.Item
+            key={candidate.fullPath}
+            value={noteName(candidate)}
+            title={candidate.attributes.title}
+            icon={getFaviconIcon(candidate.attributes)}
+          />
         ))}
       </Form.Dropdown>
       <Form.TagPicker id="tags" title="Tags" value={values.tags} onChange={onChange("tags")}>

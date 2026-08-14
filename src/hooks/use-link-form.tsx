@@ -13,6 +13,8 @@ export interface LinkFormState {
     favicon: string;
     /** Human name of the site ("GitHub"), saved as the `publisher` field. */
     siteName: string;
+    /** Note name of the parent bookmark; empty for top-level bookmarks. */
+    parent: string;
     tags: string[];
     description: string;
   };
@@ -96,6 +98,7 @@ export default function useLinkForm(
     values: {
       description: "",
       favicon: "",
+      parent: "",
       siteName: "",
       tags: [],
       title: "",

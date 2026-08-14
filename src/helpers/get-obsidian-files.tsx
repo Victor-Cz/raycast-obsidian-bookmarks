@@ -70,6 +70,10 @@ function extractFrontMatter(content: string): {
       publisher: typeof result.attributes.publisher === "string" ? result.attributes.publisher : null,
       favicon: getFaviconOverride(result.attributes),
       favorite: typeof result.attributes.favorite === "number" ? result.attributes.favorite : null,
+      parent:
+        typeof result.attributes.parent === "string" && result.attributes.parent.trim()
+          ? result.attributes.parent.trim()
+          : null,
       title: typeof result.attributes.title === "string" ? result.attributes.title : "",
       tags: Array.isArray(result.attributes.tags)
         ? result.attributes.tags.filter((tag) => typeof tag === "string")
@@ -97,6 +101,7 @@ function extractFrontMatter(content: string): {
         publisher: null,
         favicon: null,
         favorite: null,
+        parent: null,
         title: "",
         tags: [],
         saved: new Date(),

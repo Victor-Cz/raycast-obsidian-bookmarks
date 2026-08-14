@@ -12,6 +12,7 @@ import getPublisher from "./get-publisher";
 import { addToLocalStorageFiles } from "./localstorage-files";
 import { addToLocalStorageTags } from "./localstorage-tags";
 import slugify from "./slugify";
+import { asParentValue, parentNameOf } from "./sub-bookmarks";
 import tagify from "./tagify";
 import { getSaveSubfolderPath } from "./vault-path";
 import { getPreferenceValues } from "@raycast/api";
@@ -45,9 +46,13 @@ function favoriteLine(favorite: number | null | undefined): string | null {
   return typeof favorite === "number" ? `favorite: ${favorite}` : null;
 }
 
+function parentLine(parent: string | null | undefined): string | null {
+  return parent ? `parent: ${JSON.stringify(parent)}` : null;
+}
+
 /** The optional frontmatter lines that follow `tags`, as a single suffix. */
 function extraLines(attributes: FrontMatter): string {
-  return [faviconLine(attributes.favicon), favoriteLine(attributes.favorite)]
+  return [faviconLine(attributes.favicon), favoriteLine(attributes.favorite), parentLine(attributes.parent)]
     .filter((line) => line != null)
     .map((line) => `\n${line}`)
     .join("");
@@ -74,6 +79,7 @@ export async function asFile(values: LinkFormState["values"]): Promise<File> {
     source: values.url,
     publisher: values.siteName.trim() || getPublisher(values.url),
     favicon: values.favicon.trim() || null,
+    parent: asParentValue(values.parent),
     title: values.title,
     tags: values.tags.flatMap((t) => tagify(t)),
     saved: midnight,
@@ -166,6 +172,7 @@ export function asFormValues(file: File): LinkFormState["values"] {
     title: file.attributes.title,
     favicon: file.attributes.favicon ?? "",
     siteName: file.attributes.publisher ?? "",
+    parent: parentNameOf(file) ?? "",
     tags: file.attributes.tags,
     description: splitBookmarkBody(file.body).description,
   };
@@ -180,6 +187,7 @@ export function asUpdatedFile(values: LinkFormState["values"], original: File): 
     source: values.url,
     publisher: values.siteName.trim() || (urlChanged ? getPublisher(values.url) : original.attributes.publisher),
     favicon: values.favicon.trim() || null,
+    parent: asParentValue(values.parent),
     title: values.title,
     tags: Array.from(new Set(values.tags.flatMap((t) => tagify(t)).concat(requiredTags))),
   };

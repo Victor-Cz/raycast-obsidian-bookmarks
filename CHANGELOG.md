@@ -8,6 +8,11 @@
 - The cleanup never overwrites anything typed by hand, and a new "Smart Titles" preference (on by default) turns it off entirely.
 - A new "Normalize Bookmark Titles" command — disabled by default, being a one-time migration tool — previews the same normalization across every existing bookmark — showing each rename as "new title / was: old title" — and applies them one by one or all at once after confirmation. Stored titles stay the base (nothing is re-titled from the web); the network is only used to look up missing site names. Filenames are never touched, so Obsidian links keep working.
 
+## [Sub-Bookmarks] - {PR_MERGE_DATE}
+
+- Group bookmarks under another bookmark with the new "Parent" field on the save and edit forms, or with "Save Sub-Bookmark" (<kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>N</kbd>) on the parent. The relation is stored as a wikilink in a `parent` frontmatter field, so it shows up in Obsidian's graph and backlinks.
+- Browse a parent's sub-bookmarks in their own list: a parent behaves like a folder, so <kbd>Enter</kbd> (or "Show Sub-Bookmarks", <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>) opens them, and parents show how many they hold in the search results. Sub-bookmarks stay hidden behind their parent while browsing, but searching or filtering matches them like any bookmark.
+
 ## [Save From Little Arc] - {PR_MERGE_DATE}
 
 - Fix the save form prefilling the page of the full Arc window behind when invoked from a Little Arc window. Arc doesn't expose Little Arc windows to scripting, so reading the right page relies on the [Raycast Browser Extension](https://www.raycast.com/browser-extension) when it is installed; without it, the previous behaviour remains.
