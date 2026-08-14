@@ -40,7 +40,7 @@ function siteCandidates(url: string): Set<string> {
 }
 
 /**
- * Normalizes a page title to "Site – Title": site-name segments are moved
+ * Normalizes a page title to "Site | Title": site-name segments are moved
  * from wherever the page put them ("Mon projet | Figma", "GitHub -
  * user/repo") to a consistent prefix, and one is added when the title lacks
  * it but the site is known (og:site_name). Titles that already start with the
@@ -85,7 +85,7 @@ export function smartTitle(rawTitle: string, url: string, siteName?: string | nu
   const site = siteName?.trim() || strippedSite?.trim() || "";
   if (!site || normalize(core).startsWith(normalize(site))) return core;
 
-  return `${site} – ${core}`;
+  return `${site} | ${core}`;
 }
 
 export type PageMeta = {

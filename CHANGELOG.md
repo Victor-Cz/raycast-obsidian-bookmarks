@@ -2,9 +2,10 @@
 
 ## [Smart Titles] - {PR_MERGE_DATE}
 
-- Normalize the detected page title to "Site – Title" when prefilling the save form: the site's name moves from wherever the page put it ("Mon projet | Figma" becomes "Figma – Mon projet") to a consistent prefix, and is added when the tab title lacks it but the page's Open Graph metadata names it. The Open Graph title — usually the clean, human-written one — replaces the tab title when available.
+- Normalize the detected page title to "Site | Title" when prefilling the save form: the site's name moves from wherever the page put it ("Mon projet | Figma" becomes "Figma | Mon projet") to a consistent prefix, and is added when the tab title lacks it but the page's Open Graph metadata names it. The Open Graph title — usually the clean, human-written one — replaces the tab title when available.
 - Add a "Site Name" field to the save and edit forms, prefilled from the page's `og:site_name` and saved as the `publisher` frontmatter field — so search results show "GitHub" rather than "github.com". Left empty, the domain is used as before.
 - The cleanup never overwrites anything typed by hand, and a new "Smart Titles" preference (on by default) turns it off entirely.
+- A new "Normalize Bookmark Titles" command — disabled by default, being a one-time migration tool — previews the same normalization across every existing bookmark — showing each rename as "new title / was: old title" — and applies them one by one or all at once after confirmation. Stored titles stay the base (nothing is re-titled from the web); the network is only used to look up missing site names. Filenames are never touched, so Obsidian links keep working.
 
 ## [Save From Little Arc] - {PR_MERGE_DATE}
 

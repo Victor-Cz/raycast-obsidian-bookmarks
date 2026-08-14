@@ -153,6 +153,13 @@ function splitBookmarkBody(body: string | undefined): { hasHeading: boolean; des
   return { hasHeading: true, description: content.slice(match[0].length).replace(/^\n+/, "") };
 }
 
+/** Rewrites the generated `# [Title](url)` heading; bodies without one are untouched. */
+export function retitleBody(body: string | undefined, title: string, url: string): string {
+  const { hasHeading, description } = splitBookmarkBody(body);
+  if (!hasHeading) return body ?? "";
+  return `# [${title.replace(/[[\]]/g, "")}](${url})\n\n${description}`;
+}
+
 export function asFormValues(file: File): LinkFormState["values"] {
   return {
     url: file.attributes.source,

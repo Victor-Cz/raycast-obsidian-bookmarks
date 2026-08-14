@@ -31,6 +31,13 @@
       "mode": "view"
     },
     {
+      "name": "normalize-titles",
+      "title": "Normalize Bookmark Titles",
+      "description": "Preview and apply the Site | Title normalization to your existing bookmarks",
+      "mode": "view",
+      "disabledByDefault": true
+    },
+    {
       "name": "clear-cache",
       "title": "Clear Cache",
       "description": "Clear the local Raycast cache for Obsidian bookmarks",
@@ -237,7 +244,7 @@
       "required": false,
       "default": true,
       "title": "Smart Titles",
-      "description": "Normalize the detected page title to 'Site – Title' when prefilling the save form, preferring the page's Open Graph metadata when available. The title stays editable either way.",
+      "description": "Normalize the detected page title to 'Site | Title' when prefilling the save form, preferring the page's Open Graph metadata when available. The title stays editable either way.",
       "label": "Normalize Page Titles"
     },
     {
