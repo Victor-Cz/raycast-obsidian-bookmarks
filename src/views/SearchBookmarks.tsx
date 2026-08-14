@@ -121,7 +121,12 @@ export default function SearchBookmarks() {
 
     // URL matches (query params stripped) come first, then title/tags/body matches.
     const searched = () => {
-      if (!text) return files;
+      // Browsing (no query) lists bookmarks alphabetically; searching keeps
+      // relevance order. Favorites keep their hand-picked positions either way.
+      if (!text)
+        return [...files].sort((a, b) =>
+          a.attributes.title.localeCompare(b.attributes.title, undefined, { sensitivity: "base" })
+        );
       const byUrl = urlFuse.search(text).map(({ item }) => item);
       const matched = new Set(byUrl.map((file) => file.fullPath));
       const byContent = contentFuse.search(text).map(({ item }) => item);
