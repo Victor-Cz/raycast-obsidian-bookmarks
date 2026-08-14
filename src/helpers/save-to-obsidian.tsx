@@ -72,7 +72,7 @@ export async function asFile(values: LinkFormState["values"]): Promise<File> {
 
   const attributes: FrontMatter = {
     source: values.url,
-    publisher: getPublisher(values.url),
+    publisher: values.siteName.trim() || getPublisher(values.url),
     favicon: values.favicon.trim() || null,
     title: values.title,
     tags: values.tags.flatMap((t) => tagify(t)),
@@ -158,6 +158,7 @@ export function asFormValues(file: File): LinkFormState["values"] {
     url: file.attributes.source,
     title: file.attributes.title,
     favicon: file.attributes.favicon ?? "",
+    siteName: file.attributes.publisher ?? "",
     tags: file.attributes.tags,
     description: splitBookmarkBody(file.body).description,
   };
@@ -170,7 +171,7 @@ export function asUpdatedFile(values: LinkFormState["values"], original: File): 
   const attributes: FrontMatter = {
     ...original.attributes,
     source: values.url,
-    publisher: urlChanged ? getPublisher(values.url) : original.attributes.publisher,
+    publisher: values.siteName.trim() || (urlChanged ? getPublisher(values.url) : original.attributes.publisher),
     favicon: values.favicon.trim() || null,
     title: values.title,
     tags: Array.from(new Set(values.tags.flatMap((t) => tagify(t)).concat(requiredTags))),

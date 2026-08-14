@@ -1,5 +1,11 @@
 # Obsidian Bookmarks Changelog
 
+## [Smart Titles] - {PR_MERGE_DATE}
+
+- Normalize the detected page title to "Site – Title" when prefilling the save form: the site's name moves from wherever the page put it ("Mon projet | Figma" becomes "Figma – Mon projet") to a consistent prefix, and is added when the tab title lacks it but the page's Open Graph metadata names it. The Open Graph title — usually the clean, human-written one — replaces the tab title when available.
+- Add a "Site Name" field to the save and edit forms, prefilled from the page's `og:site_name` and saved as the `publisher` frontmatter field — so search results show "GitHub" rather than "github.com". Left empty, the domain is used as before.
+- The cleanup never overwrites anything typed by hand, and a new "Smart Titles" preference (on by default) turns it off entirely.
+
 ## [Save From Little Arc] - {PR_MERGE_DATE}
 
 - Fix the save form prefilling the page of the full Arc window behind when invoked from a Little Arc window. Arc doesn't expose Little Arc windows to scripting, so reading the right page relies on the [Raycast Browser Extension](https://www.raycast.com/browser-extension) when it is installed; without it, the previous behaviour remains.

@@ -81,6 +81,14 @@ The note keeps its filename, its original save date and its read state — only 
 
 If the note starts with the `# [Title](url)` heading this extension generates, that heading is regenerated from the form and everything below it is what you edit in the "Notes" field. Notes you wrote yourself keep their body as-is.
 
+## Smart Titles
+
+Browser tab titles are inconsistent — "Project X | Figma", "GitHub - user/repo: description", sometimes no site name at all. When the save form prefills from your browser, the title is normalized to a consistent **"Site – Title"** shape: the site's name moves to the front wherever the page put it, and is added when missing but known from the page's Open Graph metadata. The Open Graph title (usually the clean, human-written one) replaces the tab title when the page provides it, and titles that already start with the site's name — landing-page taglines like "Vue.js - The Progressive JavaScript Framework" — are left as they are.
+
+A **Site Name** field on the form holds the site's human name ("GitHub"), prefilled from `og:site_name` and saved as the `publisher` frontmatter field, which search results show under each bookmark. Left empty, the domain is used as before.
+
+The cleanup only ever touches the prefilled value — as soon as you edit any field, nothing is overwritten. Turn it off with the **Smart Titles** preference.
+
 ## Screenshots
 
 ![Save a bookmark to Obsidian](./metadata/screenshot2.png)

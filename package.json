@@ -48,7 +48,7 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@types/node": "~16.10.0",
+    "@types/node": "^22.9.0",
     "@types/react": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -230,6 +230,15 @@
       "title": "Check for Duplicates",
       "description": "Check for duplicate bookmarks when saving a new bookmark. If enabled, shows a warning when attempting to save a URL that already exists.",
       "label": "Check for Duplicates"
+    },
+    {
+      "name": "smartTitles",
+      "type": "checkbox",
+      "required": false,
+      "default": true,
+      "title": "Smart Titles",
+      "description": "Normalize the detected page title to 'Site – Title' when prefilling the save form, preferring the page's Open Graph metadata when available. The title stays editable either way.",
+      "label": "Normalize Page Titles"
     },
     {
       "name": "faviconField",

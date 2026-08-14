@@ -2,6 +2,7 @@ import { Form, showToast, Toast, getPreferenceValues } from "@raycast/api";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FormActions from "../actions/FormActions";
 import getFaviconIcon, { describeFaviconSource } from "../helpers/get-favicon-icon";
+import getPublisher from "../helpers/get-publisher";
 import { asFormValues } from "../helpers/save-to-obsidian";
 import { findDuplicateBookmark } from "../helpers/url-sanitizer";
 import useFiles from "../hooks/use-files";
@@ -120,6 +121,14 @@ export default function LinkForm({ file, onSaved }: Props = {}) {
         error={isDuplicate ? "This URL is already bookmarked" : undefined}
       />
       <Form.TextField id="title" title="Title" value={values.title} onChange={onChange("title")} />
+      <Form.TextField
+        id="siteName"
+        title="Site Name"
+        placeholder={getPublisher(values.url) ?? "GitHub, Le Monde…"}
+        info="Optional. The site's human name, saved as the publisher field and shown under search results. Prefilled from the page's Open Graph metadata; falls back to the domain when left empty."
+        value={values.siteName}
+        onChange={onChange("siteName")}
+      />
       <Form.Dropdown
         id="favicon"
         title="Favicon"
