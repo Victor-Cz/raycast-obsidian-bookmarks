@@ -188,7 +188,6 @@ export default function SearchBookmarks() {
                   <Action
                     title="Complete Tag"
                     icon={Icon.Hashtag}
-                    shortcut={{ modifiers: [], key: "tab" }}
                     onAction={() => setSearch(completeTag(search, tag))}
                   />
                 </ActionPanel>
