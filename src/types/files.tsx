@@ -12,6 +12,7 @@ export function isFrontMatter(v: unknown): v is FrontMatter {
     (frontMatter.publisher == null || typeof frontMatter.publisher === "string") &&
     (frontMatter.favicon == null || typeof frontMatter.favicon === "string") &&
     (frontMatter.favorite == null || typeof frontMatter.favorite === "number") &&
+    (frontMatter.parent == null || typeof frontMatter.parent === "string") &&
     isStringArray(frontMatter.tags)
   );
 }
@@ -48,6 +49,11 @@ export interface FrontMatter {
    * the bookmark isn't a favorite.
    */
   favorite?: number | null;
+  /**
+   * Wikilink (`[[note-name]]`) to the bookmark this one lives under. Null for
+   * top-level bookmarks.
+   */
+  parent?: string | null;
   title: string;
   tags: string[];
   saved: Date;

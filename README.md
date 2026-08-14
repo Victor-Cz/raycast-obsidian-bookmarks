@@ -81,6 +81,14 @@ The note keeps its filename, its original save date and its read state — only 
 
 If the note starts with the `# [Title](url)` heading this extension generates, that heading is regenerated from the form and everything below it is what you edit in the "Notes" field. Notes you wrote yourself keep their body as-is.
 
+## Sub-Bookmarks
+
+Bookmarks can be grouped under another bookmark — handy for a tool with one page per project, for example. Pick a **Parent** in the save or edit form, or use **Save Sub-Bookmark** (<kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>N</kbd>) on the parent to open the form with it preselected.
+
+While browsing, sub-bookmarks stay tucked behind their parent, which shows a counter in the search results and behaves like a folder: <kbd>Enter</kbd> (or **Show Sub-Bookmarks**, <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>) opens them in their own list, and your usual default action moves one row down in its action panel. Any search or filter still matches sub-bookmarks directly, and favoriting one pins it to the top level like any other favorite.
+
+The relation lives in the note as a `parent` frontmatter field holding a wikilink (`parent: "[[note-name]]"`), so it shows up in Obsidian's graph and backlinks. Renaming or deleting the parent note simply makes its sub-bookmarks top-level again.
+
 ## Screenshots
 
 ![Save a bookmark to Obsidian](./metadata/screenshot2.png)

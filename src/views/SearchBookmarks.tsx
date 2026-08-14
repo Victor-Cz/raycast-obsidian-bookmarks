@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import useFiles from "../hooks/use-files";
 import { getFavorites, isFavorite } from "../helpers/favorites";
 import { completeTag, matchesTags, parseSearchQuery } from "../helpers/search-query";
+import { countSubBookmarks, isSubBookmark, noteName } from "../helpers/sub-bookmarks";
 import { sanitizeUrl } from "../helpers/url-sanitizer";
 import { File } from "../types";
 import FileListItem from "./FileListItem";
@@ -133,9 +134,17 @@ export default function SearchBookmarks() {
     setFileResult(filteredItems);
   }, [text, searchTags, filter, urlFuse, contentFuse]);
 
+  const subCounts = useMemo(() => countSubBookmarks(files), [files]);
+  const parentNames = useMemo(() => new Set(files.map(noteName)), [files]);
+
   const actionProps = { showDetail, setShowDetail, onFileUpdated: updateFile };
   const favoriteResults = getFavorites(fileResult);
-  const otherResults = fileResult.filter((file) => !isFavorite(file));
+  // Sub-bookmarks stay hidden behind their parent while browsing, but show up
+  // as soon as anything is searched or filtered — favorites keep their spot.
+  const isDefaultView = !text && searchTags.length === 0 && filter === "all";
+  const otherResults = fileResult.filter(
+    (file) => !isFavorite(file) && !(isDefaultView && isSubBookmark(parentNames, file))
+  );
 
   return (
     <List
@@ -199,13 +208,27 @@ export default function SearchBookmarks() {
       {favoriteResults.length > 0 && (
         <List.Section title="Favorites">
           {favoriteResults.map((file) => (
-            <FileListItem file={file} files={files} loading={loading} key={file.fullPath} {...actionProps} />
+            <FileListItem
+              file={file}
+              files={files}
+              loading={loading}
+              subCount={subCounts.get(noteName(file)) ?? 0}
+              key={file.fullPath}
+              {...actionProps}
+            />
           ))}
         </List.Section>
       )}
       <List.Section title={tagSuggestions.length > 0 || favoriteResults.length > 0 ? "Bookmarks" : undefined}>
         {otherResults.map((file) => (
-          <FileListItem file={file} files={files} loading={loading} key={file.fullPath} {...actionProps} />
+          <FileListItem
+            file={file}
+            files={files}
+            loading={loading}
+            subCount={subCounts.get(noteName(file)) ?? 0}
+            key={file.fullPath}
+            {...actionProps}
+          />
         ))}
       </List.Section>
     </List>
