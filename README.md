@@ -95,7 +95,7 @@ To bring your existing bookmarks in line, enable the **Normalize Bookmark Titles
 
 Bookmarks can be grouped under another bookmark — handy for a tool with one page per project, for example. Pick a **Parent** in the save or edit form, or use **Save Sub-Bookmark** (<kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>N</kbd>) on the parent to open the form with it preselected.
 
-While browsing, sub-bookmarks stay tucked behind their parent, which shows a counter in the search results and behaves like a folder: <kbd>Enter</kbd> (or **Show Sub-Bookmarks**, <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>) opens them in their own list, and your usual default action moves one row down in its action panel. Any search or filter still matches sub-bookmarks directly, and favoriting one pins it to the top level like any other favorite.
+Sub-bookmarks stay listed with everything else, and their parent shows a counter in the search results and behaves like a folder: <kbd>Enter</kbd> (or **Show Sub-Bookmarks**, <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>) opens them in their own focused list, and your usual default action moves one row down in its action panel. Favoriting a sub-bookmark pins it to the favorites section like any other bookmark.
 
 The relation lives in the note as a `parent` frontmatter field holding a wikilink (`parent: "[[note-name]]"`), so it shows up in Obsidian's graph and backlinks. Renaming or deleting the parent note simply makes its sub-bookmarks top-level again.
 
