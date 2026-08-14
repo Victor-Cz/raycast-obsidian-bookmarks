@@ -27,6 +27,7 @@
 ## [Edit Bookmarks] - {PR_MERGE_DATE}
 
 - Add an "Edit Bookmark" action (<kbd>⌘</kbd>+<kbd>E</kbd>) to search results. It reopens the save form, prefilled with the bookmark's URL, title, favicon, tags and notes, and writes the changes back to the same note — its filename, save date and read state are left untouched.
+- "Fetch Page Content" on the edit form only pulls from the active browser tab when it is the bookmarked page, instead of grabbing whatever tab is in front.
 
 ## [Favicons] - {PR_MERGE_DATE}
 
