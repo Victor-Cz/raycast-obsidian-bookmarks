@@ -8,6 +8,8 @@ export interface LinkFormState {
     title: string;
     url: string;
     favicon: string;
+    /** Note name of the parent bookmark; empty for top-level bookmarks. */
+    parent: string;
     tags: string[];
     description: string;
   };
@@ -77,6 +79,7 @@ export default function useLinkForm(
     values: {
       description: "",
       favicon: "",
+      parent: "",
       tags: [],
       title: "",
       url: "",

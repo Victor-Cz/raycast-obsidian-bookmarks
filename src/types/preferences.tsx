@@ -18,7 +18,9 @@ export type DetailActionPreference =
   | "moveFavoriteDown"
   | "editBookmark"
   | "markAsRead"
-  | "deleteFile";
+  | "deleteFile"
+  | "showSubBookmarks"
+  | "addSubBookmark";
 
 export interface Preferences {
   vaultPath: string;

@@ -20,6 +20,8 @@ import { ActionGroup, OrderedActionPanel } from "./order-manager";
 import { clearCache } from "../helpers/clear-cache";
 import { addToFavorites, isFavorite, moveFavorite, removeFromFavorites } from "../helpers/favorites";
 import readBookmarkBody from "../helpers/read-bookmark-body";
+import { getSubBookmarks, noteName } from "../helpers/sub-bookmarks";
+import SubBookmarks from "../views/SubBookmarks";
 
 const createDetailsActions = (
   file: File,
@@ -176,6 +178,31 @@ const createFavoriteActions = (
   return { key: "favorites", useDivider: "unless-first", title: "Favorites", actions };
 };
 
+const createSubBookmarksActions = (
+  subBookmarkCount: number,
+  showSubBookmarks: () => void,
+  addSubBookmark: () => void
+): ActionGroup<DetailActionPreference> => {
+  const actions = new Map<DetailActionPreference, Action.Props>();
+
+  if (subBookmarkCount > 0) {
+    actions.set("showSubBookmarks", {
+      title: `Show Sub-Bookmarks (${subBookmarkCount})`,
+      icon: Icon.Bookmark,
+      shortcut: { modifiers: ["cmd", "shift"], key: "b" },
+      onAction: showSubBookmarks,
+    });
+  }
+  actions.set("addSubBookmark", {
+    title: "Save Sub-Bookmark",
+    icon: Icon.PlusSquare,
+    shortcut: { modifiers: ["cmd", "shift"], key: "n" },
+    onAction: addSubBookmark,
+  });
+
+  return { key: "subBookmarks", useDivider: "unless-first", title: "Sub-Bookmarks", actions };
+};
+
 const createDestructiveActions = (file: File): ActionGroup<DetailActionPreference> => ({
   key: "destructive",
   useDivider: "always",
@@ -232,6 +259,8 @@ export type DetailsActionsProps = {
   showDetail: boolean;
   setShowDetail: Dispatch<SetStateAction<boolean>>;
   onFileUpdated?: (file: File) => void;
+  /** Off inside a bookmark's own sub-bookmarks view, where Enter re-opening it would loop. */
+  openSubBookmarksByDefault?: boolean;
 };
 export default function DetailsActions({
   file,
@@ -239,6 +268,7 @@ export default function DetailsActions({
   showDetail,
   setShowDetail,
   onFileUpdated,
+  openSubBookmarksByDefault = true,
 }: DetailsActionsProps): React.JSX.Element {
   const { value: obsidianFileIcon } = useFileIcon("Obsidian");
   const { value: defaultAction } = usePreference("defaultItemAction");
@@ -253,6 +283,26 @@ export default function DetailsActions({
     },
     [onFileUpdated]
   );
+
+  const showSubBookmarks = useCallback(() => {
+    push(
+      <ApplicationsProvider>
+        <PreferencesProvider>
+          <SubBookmarks parent={file} files={files} onFileUpdated={onFileUpdated} />
+        </PreferencesProvider>
+      </ApplicationsProvider>
+    );
+  }, [push, file, files, onFileUpdated]);
+
+  const addSubBookmark = useCallback(() => {
+    push(
+      <ApplicationsProvider>
+        <PreferencesProvider>
+          <LinkForm initialParent={noteName(file)} onSaved={onFileUpdated} />
+        </PreferencesProvider>
+      </ApplicationsProvider>
+    );
+  }, [push, file, onFileUpdated]);
 
   const editBookmark = useCallback(async () => {
     let body: string;
@@ -276,15 +326,32 @@ export default function DetailsActions({
     );
   }, [push, file, onFileUpdated]);
 
+  const subBookmarkCount = useMemo(() => getSubBookmarks(files, file).length, [files, file]);
+
   const groups = useMemo(() => {
     return [
       createDetailsActions(file, showDetail, setShowDetail, editBookmark),
       createBrowserActions(file),
+      createSubBookmarksActions(subBookmarkCount, showSubBookmarks, addSubBookmark),
       createFavoriteActions(file, files, applyFavorites),
       createObsidianActions(file, obsidianFileIcon),
       createDestructiveActions(file),
     ];
-  }, [file, files, obsidianFileIcon, showDetail, setShowDetail, editBookmark, applyFavorites]);
+  }, [
+    file,
+    files,
+    subBookmarkCount,
+    obsidianFileIcon,
+    showDetail,
+    setShowDetail,
+    editBookmark,
+    applyFavorites,
+    showSubBookmarks,
+    addSubBookmark,
+  ]);
 
-  return <OrderedActionPanel groups={groups} defaultAction={defaultAction} />;
+  // A bookmark holding sub-bookmarks behaves like a folder: Enter opens them,
+  // and the configured default action moves one row down in the panel.
+  const effectiveDefault = subBookmarkCount > 0 && openSubBookmarksByDefault ? "showSubBookmarks" : defaultAction;
+  return <OrderedActionPanel groups={groups} defaultAction={effectiveDefault} />;
 }
