@@ -1,5 +1,10 @@
 # Obsidian Bookmarks Changelog
 
+## [Save From Little Arc] - {PR_MERGE_DATE}
+
+- Fix the save form prefilling the page of the full Arc window behind when invoked from a Little Arc window. Arc doesn't expose Little Arc windows to scripting, so reading the right page relies on the [Raycast Browser Extension](https://www.raycast.com/browser-extension) when it is installed; without it, the previous behaviour remains.
+- When several browser windows are open, the Browser Extension path now picks the tab of the window actually in front instead of the first active tab it finds.
+
 ## [Fix Notes Gaining a Copy of Their Frontmatter] - {PR_MERGE_DATE}
 
 - Fix saving a bookmark — marking it as read, favoriting it — writing a copy of the note's own frontmatter into its body. The body was cut from the note using `bodyBegin`, which counts lines, as if it were a character offset. Run "Clear Cache" once after updating, as cached bookmarks still hold the broken body.
