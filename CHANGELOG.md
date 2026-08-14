@@ -3,6 +3,7 @@
 ## [Fix Notes Gaining a Copy of Their Frontmatter] - {PR_MERGE_DATE}
 
 - Fix saving a bookmark — marking it as read, favoriting it — writing a copy of the note's own frontmatter into its body. The body was cut from the note using `bodyBegin`, which counts lines, as if it were a character offset. Run "Clear Cache" once after updating, as cached bookmarks still hold the broken body.
+- Re-read the note body from disk before favoriting, reordering favorites or toggling read state, so a stale cached body — including one holding that duplicated frontmatter — is never written back.
 
 ## [Favorite Bookmarks] - {PR_MERGE_DATE}
 
