@@ -85,7 +85,7 @@ If the note starts with the `# [Title](url)` heading this extension generates, t
 
 Browser tab titles are inconsistent — "Project X | Figma", "GitHub - user/repo: description", sometimes no site name at all. When the save form prefills from your browser, the title is normalized to a consistent **"Site | Title"** shape: the site's name moves to the front wherever the page put it, and is added when missing but known from the page's Open Graph metadata. The Open Graph title (usually the clean, human-written one) replaces the tab title when the page provides it, and titles that already start with the site's name — landing-page taglines like "Vue.js - The Progressive JavaScript Framework" — are left as they are.
 
-A **Site Name** field on the form holds the site's human name ("GitHub"), prefilled from `og:site_name` and saved as the `publisher` frontmatter field, which search results show under each bookmark. Left empty, the domain is used as before.
+The site's human name ("GitHub") is picked up from the page's `og:site_name` at the same time and saved as the `publisher` frontmatter field, which search results show under each bookmark — so they read "GitHub" rather than "github.com". When the page names no site, the domain is used as before, and editing a bookmark keeps whatever its note already had. Nothing to fill in: the value is only ever read from the page or from the note.
 
 The cleanup only ever touches the prefilled value — as soon as you edit any field, nothing is overwritten. Turn it off with the **Smart Titles** preference.
 
