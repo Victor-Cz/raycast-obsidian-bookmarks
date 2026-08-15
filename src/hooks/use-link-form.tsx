@@ -11,7 +11,11 @@ export interface LinkFormState {
     title: string;
     url: string;
     favicon: string;
-    /** Human name of the site ("GitHub"), saved as the `publisher` field. */
+    /**
+     * Human name of the site ("GitHub"), saved as the `publisher` field. Read
+     * from the page's metadata rather than typed: there is no form field for
+     * it, and an existing bookmark's value is carried over untouched.
+     */
     siteName: string;
     tags: string[];
     description: string;
