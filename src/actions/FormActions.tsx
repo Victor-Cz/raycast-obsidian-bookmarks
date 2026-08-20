@@ -13,6 +13,7 @@ import {
 import { useCallback, useMemo } from "react";
 import { asFile, asUpdatedFile } from "../helpers/save-to-obsidian";
 import { sanitizeUrl } from "../helpers/url-sanitizer";
+import { getFrontmostLink } from "../hooks/use-frontmost-link";
 import { useFileIcon } from "../hooks/use-applications";
 import { LinkFormState } from "../hooks/use-link-form";
 import { usePreference } from "../hooks/use-preferences";
@@ -54,6 +55,31 @@ const createContentActions = (
   useDivider: "unless-first",
   title: "Content Actions",
   actions: new Map<FormActionPreference, Action.Props>([
+    [
+      "refetchUrl" as FormActionPreference,
+      {
+        title: "Use Current Tab URL",
+        icon: Icon.ArrowClockwise,
+        shortcut: { modifiers: ["cmd"], key: "r" },
+        onAction: async () => {
+          const link = await getFrontmostLink();
+          if (!link?.url) {
+            await showToast({
+              style: Toast.Style.Failure,
+              title: "No browser tab found",
+              message: "Bring the page to the front in a supported browser, then try again.",
+            });
+            return;
+          }
+          setValues({ ...values, url: link.url });
+          await showToast({
+            style: Toast.Style.Success,
+            title: "URL updated from current tab",
+            message: link.url,
+          });
+        },
+      },
+    ],
     [
       "fetchContent" as FormActionPreference,
       {
