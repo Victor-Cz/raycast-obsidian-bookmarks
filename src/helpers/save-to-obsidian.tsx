@@ -188,7 +188,9 @@ export default async function saveToObsidian(file: File): Promise<string> {
   return file.fileName;
 }
 
-const BOOKMARK_HEADING = /^#\s+\[[^\]\n]*\]\([^)\n]*\)\n?/;
+// The generated heading takes the whole first line. URLs can contain
+// parentheses (Wikipedia's often do), so the link runs to the last `)`.
+const BOOKMARK_HEADING = /^#\s+\[[^\]\n]*\]\([^\n]*\)[ \t]*(?:\n|$)/;
 
 function splitBookmarkBody(body: string | undefined): { hasHeading: boolean; description: string } {
   const content = body ?? "";
