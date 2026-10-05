@@ -1,5 +1,9 @@
 # Obsidian Bookmarks Changelog
 
+## [Self-Refreshing Cache] - {PR_MERGE_DATE}
+
+- Rebuild the bookmark cache automatically when an update changes how notes are read. Bookmarks unchanged since the last scan were served from the cache as the previous version had read them, so frontmatter fields it didn't know about stayed invisible until "Clear Cache" was run by hand.
+
 ## [Safer Bookmark Editing] - {PR_MERGE_DATE}
 
 - Keep frontmatter fields the extension doesn't manage, such as `aliases` or `cssclasses`, when editing, favoriting or marking a bookmark as read. They used to be dropped.

@@ -22,7 +22,20 @@ function isFileArray(v: unknown): v is File[] {
   return Array.isArray(v) && v.every((val) => isFile(val));
 }
 
+/**
+ * Version of the cached files' shape. Files are only re-read when their mtime
+ * changes, so a cache written before the parser learned a new frontmatter
+ * field keeps serving bookmarks without it. Bump this whenever
+ * `extractFrontMatter` reads something new: a cache from another version is
+ * discarded and every note is parsed again.
+ */
+const CACHE_VERSION = 1;
+const CACHE_VERSION_KEY = "obsidian-files-version";
+
 async function getLocalStorageFilesInternal(): Promise<File[]> {
+  const version = await LocalStorage.getItem<number>(CACHE_VERSION_KEY);
+  if (version !== CACHE_VERSION) return [];
+
   const stored = await LocalStorage.getItem<string>("obsidian-files");
   if (!stored) return [];
 
@@ -88,6 +101,7 @@ async function replaceLocalStorageFilesInternal(files: File[]): Promise<void> {
       console.error("Validation failed: some files have invalid mtime");
     }
     await LocalStorage.setItem("obsidian-files", json);
+    await LocalStorage.setItem(CACHE_VERSION_KEY, CACHE_VERSION);
   } catch (error) {
     console.error("Failed to serialize files:", error);
     throw error;
