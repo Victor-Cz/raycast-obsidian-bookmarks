@@ -4,6 +4,7 @@
 
 - "Fetch Page Content" now reads the tab that matches the bookmark, even when it isn't in the focused window, instead of whatever tab happened to be in front.
 - Query parameters now count when comparing URLs, so two YouTube videos are no longer mistaken for the same page, and no longer flagged as duplicates. Tracking parameters such as `utm_*` are still ignored.
+- Report a bookmark as saved only once it has actually been written to disk, and show an error if the write fails.
 
 ## [Save From Little Arc] - {PR_MERGE_DATE}
 

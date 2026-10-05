@@ -135,11 +135,10 @@ export default async function saveToObsidian(file: File): Promise<string> {
     ${file.body}
   `;
 
-  await Promise.allSettled([
-    fs.writeFile(file.fullPath, template, { encoding: "utf-8" }),
-    addToLocalStorageTags(file.attributes.tags),
-    addToLocalStorageFiles([file]),
-  ]);
+  // The caches must only learn about the bookmark once it's actually on disk,
+  // and a failed write has to reach the caller.
+  await fs.writeFile(file.fullPath, template, { encoding: "utf-8" });
+  await Promise.allSettled([addToLocalStorageTags(file.attributes.tags), addToLocalStorageFiles([file])]);
   return file.fileName;
 }
 
