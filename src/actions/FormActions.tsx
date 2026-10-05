@@ -12,7 +12,7 @@ import {
 } from "@raycast/api";
 import { useCallback, useMemo } from "react";
 import { asFile, asUpdatedFile } from "../helpers/save-to-obsidian";
-import { sanitizeUrl } from "../helpers/url-sanitizer";
+import { isSameUrl } from "../helpers/url-sanitizer";
 import { getFrontmostLink } from "../hooks/use-frontmost-link";
 import { useFileIcon } from "../hooks/use-applications";
 import { LinkFormState } from "../hooks/use-link-form";
@@ -30,15 +30,20 @@ async function fetchPageContent(expectedUrl?: string): Promise<string> {
   try {
     // When editing, the content must come from the bookmarked page — not from
     // whatever tab happens to be in front, which is usually Raycast's caller.
+    // Every window has an active tab, so the content is fetched from the tab
+    // that matched rather than from the focused one.
+    let tabId: number | undefined;
     if (expectedUrl) {
       const tabs = await BrowserExtension.getTabs();
-      const activeTab = tabs.find((tab) => tab.active);
-      if (!activeTab?.url || sanitizeUrl(activeTab.url) !== sanitizeUrl(expectedUrl)) {
+      const matching = tabs.filter((tab) => tab.url && isSameUrl(tab.url, expectedUrl));
+      const tab = matching.find((t) => t.active) ?? matching[0];
+      if (!tab) {
         throw new Error("Open this bookmark's page in your browser first, then try again.");
       }
+      tabId = tab.id;
     }
 
-    const content = await BrowserExtension.getContent({ format: "markdown" });
+    const content = await BrowserExtension.getContent({ tabId, format: "markdown" });
     return `\n\n# Page Content\n\n${content}`;
   } catch (error) {
     console.error("Error fetching page content:", error);
