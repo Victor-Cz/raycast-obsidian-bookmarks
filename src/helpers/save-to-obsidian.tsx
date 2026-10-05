@@ -120,7 +120,7 @@ function managedFields(): Set<string> {
   return new Set(["title", "saved", "source", "publisher", "read", "tags", "favorite", getFaviconField()]);
 }
 
-const TOP_LEVEL_KEY = /^(?:"((?:[^"\\]|\\.)*)"|'((?:[^']|'')*)'|([^\s#'"-][^:]*?))[ \t]*:(?:\s|$)/;
+const TOP_LEVEL_KEY = /^(?:"((?:[^"\\]|\\.)*)"|'((?:[^']|'')*)'|(?!-(?:\s|$))([^\s#'"][^:]*?))[ \t]*:(?:\s|$)/;
 
 /**
  * Returns the top-level entries of a raw YAML frontmatter that this extension
